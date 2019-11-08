@@ -39,9 +39,9 @@ public class SignUpController {
             return new ResponseEntity<>("Email exists in database", HttpStatus.BAD_REQUEST);
         }
 
-        User user = new User(signUpDTO.getUsername(), signUpDTO.getEmail(), passwordEncoder.encode(signUpDTO.getPassword()));
+        User user = new User(signUpDTO.getUsername(), signUpDTO.getName(), signUpDTO.getSurname(),
+                signUpDTO.getEmail(), signUpDTO.getPesel(), signUpDTO.getBirthdate(), passwordEncoder.encode(signUpDTO.getPassword()));
 
-        Set<String> requestedRoles = signUpDTO.getRoles();
         Set<Role> roles = new HashSet<>();
 
         signUpDTO.getRoles().forEach(role -> {
@@ -57,8 +57,8 @@ public class SignUpController {
                     roles.add(userRole);
                     break;
                 case "dba":
-                    Role dbaRole = roleRepository.findByName(RoleName.ROLE_DBA)
-                            .orElseThrow(() -> new RuntimeException("DBA role not found"));
+                    Role dbaRole = roleRepository.findByName(RoleName.ROLE_INSTRUCTOR)
+                            .orElseThrow(() -> new RuntimeException("Instructor role not found"));
                     roles.add(dbaRole);
                     break;
             }
