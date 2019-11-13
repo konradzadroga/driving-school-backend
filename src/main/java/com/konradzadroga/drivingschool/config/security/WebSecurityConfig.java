@@ -2,6 +2,7 @@ package com.konradzadroga.drivingschool.config.security;
 
 import com.konradzadroga.drivingschool.config.jwt.JwtAuthEntryPoint;
 import com.konradzadroga.drivingschool.config.jwt.JwtAuthTokenFilter;
+import com.konradzadroga.drivingschool.config.jwt.JwtProvider;
 import com.konradzadroga.drivingschool.config.service.MyUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -23,10 +29,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private MyUserDetailsService userDetailsService;
     private JwtAuthEntryPoint jwtAuthEntryPoint;
+    private JwtProvider jwtProvider;
+    private final String ANGULAR_API = "http://localhost:4200";
 
-    public WebSecurityConfig(MyUserDetailsService userDetailsService, JwtAuthEntryPoint jwtAuthEntryPoint) {
+    public WebSecurityConfig(MyUserDetailsService userDetailsService, JwtAuthEntryPoint jwtAuthEntryPoint, JwtProvider jwtProvider) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthEntryPoint = jwtAuthEntryPoint;
+        this.jwtProvider = jwtProvider;
     }
 
     @Override
@@ -41,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthTokenFilter authTokenFilterBean() {
-        return new JwtAuthTokenFilter();
+        return new JwtAuthTokenFilter(jwtProvider, userDetailsService);
     }
 
     @Bean
@@ -63,6 +72,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.addFilterBefore(authTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList(ANGULAR_API));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "UPDATE","DELETE", "PATCH"));
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }

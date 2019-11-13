@@ -46,17 +46,17 @@ public class SignUpController {
 
         signUpDTO.getRoles().forEach(role -> {
             switch(role) {
-                case "admin":
+                case "ROLE_ADMIN":
                     Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
                             .orElseThrow(() -> new RuntimeException("Admin role not found"));
                     roles.add(adminRole);
                 break;
-                case "user":
+                case "ROLE_USER":
                     Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                             .orElseThrow(() -> new RuntimeException("User role not found"));
                     roles.add(userRole);
                     break;
-                case "dba":
+                case "ROLE_INSTRUCTOR":
                     Role dbaRole = roleRepository.findByName(RoleName.ROLE_INSTRUCTOR)
                             .orElseThrow(() -> new RuntimeException("Instructor role not found"));
                     roles.add(dbaRole);

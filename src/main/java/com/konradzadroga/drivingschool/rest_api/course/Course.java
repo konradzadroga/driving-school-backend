@@ -1,9 +1,9 @@
 package com.konradzadroga.drivingschool.rest_api.course;
 
+import com.konradzadroga.drivingschool.rest_api.user.User;
 import lombok.Data;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Data
@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 public class Course {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotBlank
@@ -19,5 +20,6 @@ public class Course {
 
     @NotBlank
     private String description;
+
 
 }
