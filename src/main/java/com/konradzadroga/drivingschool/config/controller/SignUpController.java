@@ -1,6 +1,7 @@
 package com.konradzadroga.drivingschool.config.controller;
 
 import com.konradzadroga.drivingschool.config.message.request.SignUpDTO;
+import com.konradzadroga.drivingschool.config.message.response.ResponseMessage;
 import com.konradzadroga.drivingschool.rest_api.role.Role;
 import com.konradzadroga.drivingschool.rest_api.role.RoleName;
 import com.konradzadroga.drivingschool.rest_api.role.RoleRepository;
@@ -31,12 +32,12 @@ public class SignUpController {
     }
 
     @RequestMapping(value="signup", method= RequestMethod.POST)
-    public ResponseEntity<String> signUp(@RequestBody SignUpDTO signUpDTO) {
+    public ResponseEntity<?> signUp(@RequestBody SignUpDTO signUpDTO) {
         if (userRepository.existsByUsername(signUpDTO.getUsername())) {
-            return new ResponseEntity<>("Username exists in database", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseMessage("Użytkownik o podanym loginie już istnieje."), HttpStatus.BAD_REQUEST);
         }
         if (userRepository.existsByEmail(signUpDTO.getEmail())) {
-            return new ResponseEntity<>("Email exists in database", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseMessage("Użytkownik o podanym adresie e-mail już istnieje."), HttpStatus.BAD_REQUEST);
         }
 
         User user = new User(signUpDTO.getUsername(), signUpDTO.getName(), signUpDTO.getSurname(),
@@ -67,6 +68,6 @@ public class SignUpController {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return ResponseEntity.ok("User has been created.");
+        return new ResponseEntity<>(new ResponseMessage("Rejestracja przebiegła pomyślnie"), HttpStatus.OK      );
     }
 }
