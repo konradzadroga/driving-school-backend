@@ -21,5 +21,8 @@ public class Course {
     @NotBlank
     private String description;
 
+    @NotBlank
+    private int places;
+
 
 }

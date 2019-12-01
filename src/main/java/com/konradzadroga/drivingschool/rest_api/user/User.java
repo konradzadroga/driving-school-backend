@@ -3,6 +3,7 @@ package com.konradzadroga.drivingschool.rest_api.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.konradzadroga.drivingschool.rest_api.activity.Activity;
 import com.konradzadroga.drivingschool.rest_api.course.Course;
+import com.konradzadroga.drivingschool.rest_api.message.Message;
 import com.konradzadroga.drivingschool.rest_api.role.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -58,10 +60,18 @@ public class User {
     private Set<Role> roles;
 
     @ManyToMany
-    private List<Course> courses;
+    private Set<Course> courses;
 
     @OneToMany(mappedBy = "student")
-    private List<Activity> activities;
+    private Collection<Activity> activities;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "receiver")
+    private Collection<Message> receivedMessages;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "sender")
+    private Collection<Message> sentMessages;
 
     public User(@NotBlank @Size(max = 40) String username, @NotBlank @Size(max = 30) String name, @NotBlank @Size(max = 35) String surname, @Email @Size(max = 60) String email, @NotBlank @Size(min = 16, max = 16) String pesel, @NotBlank Date birthdate, @NotBlank @Size(min = 6) String password) {
         this.username = username;
