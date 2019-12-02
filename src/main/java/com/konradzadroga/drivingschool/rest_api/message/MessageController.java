@@ -15,15 +15,13 @@ public class MessageController {
     public MessageController(MessageService messageService) {
         this.messageService = messageService;
     }
-
-    @PreAuthorize("hasRole('USER')")
+    
     @RequestMapping(value="/messages/send", method = RequestMethod.POST)
-    public ResponseEntity<Message> sendMessage(@RequestBody SendMessageDTO sentMessage) {
-        Message message = messageService.sendMessage(sentMessage);
-        return new ResponseEntity<>(message, HttpStatus.OK);
+    public ResponseEntity sendMessage(@RequestBody SendMessageDTO sentMessage) {
+        messageService.sendMessage(sentMessage);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('USER')")
     @RequestMapping(value="/messages/{username}", method = RequestMethod.GET)
     public ResponseEntity<List<GetMessageDTO>> getMessagesWithParticularUser(@PathVariable String username) {
         List<GetMessageDTO> messages = messageService.getMessagesWithParticularUser(username);

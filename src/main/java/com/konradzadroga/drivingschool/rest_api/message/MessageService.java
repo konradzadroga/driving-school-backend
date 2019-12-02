@@ -39,8 +39,8 @@ public class MessageService {
         return message;
     }
 
-    public Message sendMessage(SendMessageDTO sentMessage) {
-        return messageRepository.save(buildMessage(sentMessage));
+    public void sendMessage(SendMessageDTO sentMessage) {
+        messageRepository.save(buildMessage(sentMessage));
     }
 
     public void addMessagesToList(List<GetMessageDTO> messages, String senderUsername, String receiverUsername) {

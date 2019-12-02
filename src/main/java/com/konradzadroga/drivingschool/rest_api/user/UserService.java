@@ -32,7 +32,11 @@ public class UserService {
 
     public List<User> findAllUsers() {
         List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(user -> users.add(user));
+        userRepository.findAll().forEach(user ->
+        {
+            if (user.getUsername() != getCurrentUser().getUsername())
+                users.add(user);
+        });
         return users;
     }
 
@@ -54,42 +58,21 @@ public class UserService {
         return user;
     }
 
+
     public List<GetUserInfoDTO> getUsersWithParticularRole(String name) {
         List<GetUserInfoDTO> users = new ArrayList<>();
-        RoleName roleName = null;
-        switch (name) {
-            case "ROLE_USER":
-                roleName = RoleName.ROLE_USER;
-                break;
-            case "ROLE_ADMIN":
-                roleName = RoleName.ROLE_ADMIN;
-                break;
-            case "ROLE_INSTRUCTOR":
-                roleName = RoleName.ROLE_INSTRUCTOR;
-                break;
-        }
+        RoleName roleName = roleService.findRoleName(name);
         userRepository.findAllByRolesName(roleName).forEach(
-                user -> users.add(GetUserInfoDTO.createDTO(user))
-        );
+                user -> {
+                    if (user.getUsername() != getCurrentUser().getUsername())
+                        users.add(GetUserInfoDTO.createDTO(user));
+                });
         return users;
     }
 
     public User assignRoleToUser(String username, String name) {
         User user = findUserByUsername(username);
-        RoleName roleName = null;
-
-        switch (name) {
-            case "ROLE_USER":
-                roleName = RoleName.ROLE_USER;
-                break;
-            case "ROLE_ADMIN":
-                roleName = RoleName.ROLE_ADMIN;
-                break;
-            case "ROLE_INSTRUCTOR":
-                roleName = RoleName.ROLE_INSTRUCTOR;
-                break;
-        }
-
+        RoleName roleName = roleService.findRoleName(name);
         Role role = roleService.findRoleByName(roleName);
         Set<Role> userRoles = user.getRoles();
         userRoles.add(role);

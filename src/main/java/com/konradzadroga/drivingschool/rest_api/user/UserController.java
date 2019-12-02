@@ -23,12 +23,11 @@ public class UserController {
     @RequestMapping(value="users", method= RequestMethod.GET)
     public ResponseEntity<List<User>> findAllUsers() {
         List<User> users = userService.findAllUsers();
-
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PostAuthorize("returnObject.getUsername() == authentication.principal.username")
-    @RequestMapping(value="me", method = RequestMethod.GET)
+    @RequestMapping(value="/users/me", method = RequestMethod.GET)
     public User getLoggedUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByUsername(username);
