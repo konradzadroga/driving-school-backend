@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetUserInfoDTO {
+public class UserBasicInfoDTO {
 
     private String username;
     private String name;
     private String surname;
     private String email;
 
-    public static GetUserInfoDTO createDTO(User user) {
-        GetUserInfoDTO dto = new GetUserInfoDTO();
+    public static UserBasicInfoDTO createDTO(User user) {
+        UserBasicInfoDTO dto = new UserBasicInfoDTO();
 
         dto.setUsername(user.getUsername());
         dto.setName(user.getName());

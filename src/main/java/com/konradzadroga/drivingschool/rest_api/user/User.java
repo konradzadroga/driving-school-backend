@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.konradzadroga.drivingschool.rest_api.activity.Activity;
 import com.konradzadroga.drivingschool.rest_api.course.Course;
 import com.konradzadroga.drivingschool.rest_api.message.Message;
+import com.konradzadroga.drivingschool.rest_api.picture.Picture;
 import com.konradzadroga.drivingschool.rest_api.role.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,6 +62,9 @@ public class User {
 
     @ManyToMany
     private Set<Course> courses;
+
+    @OneToOne(mappedBy="user", fetch = FetchType.LAZY)
+    private Picture picture;
 
     @OneToMany(mappedBy = "student")
     private Collection<Activity> activities;

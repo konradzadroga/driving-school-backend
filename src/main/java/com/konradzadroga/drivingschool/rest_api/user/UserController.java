@@ -21,37 +21,35 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="users", method= RequestMethod.GET)
-    public ResponseEntity<List<User>> findAllUsers() {
-        List<User> users = userService.findAllUsers();
+    public ResponseEntity<List<UserDTO>> findAllUsers() {
+        List<UserDTO> users = userService.findAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PostAuthorize("returnObject.getUsername() == authentication.principal.username")
     @RequestMapping(value="/users/me", method = RequestMethod.GET)
-    public User getLoggedUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.findUserByUsername(username);
+    public UserDTO getSignedInUser() {
+        UserDTO user = userService.getSignedInUser();
         return user;
     }
 
-    @PreAuthorize("hasRole('USER')")
     @RequestMapping(value="/users/courses/add/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<User> addCourseToUser(@PathVariable("id") int id) {
+    public ResponseEntity<UserDTO> addCourseToUser(@PathVariable("id") int id) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.addCourseToUser(username, id);
+        UserDTO user = userService.addCourseToUser(username, id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(value="/users/roles/{role}", method = RequestMethod.GET)
-    public ResponseEntity<List<GetUserInfoDTO>> getUsersWithParticularRole(@PathVariable String role){
-        List<GetUserInfoDTO> users = userService.getUsersWithParticularRole(role);
+    public ResponseEntity<List<UserBasicInfoDTO>> getUsersWithParticularRole(@PathVariable String role){
+        List<UserBasicInfoDTO> users = userService.getUsersWithParticularRole(role);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="/users/roles/assign/{role}/{username}", method = RequestMethod.POST)
-    public ResponseEntity<User> assignRoleToUser(@PathVariable String role, @PathVariable String username) {
-        User user = userService.assignRoleToUser(username, role);
+    public ResponseEntity<UserDTO> assignRoleToUser(@PathVariable String role, @PathVariable String username) {
+        UserDTO user = userService.assignRoleToUser(username, role);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

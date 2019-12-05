@@ -30,12 +30,20 @@ public class UserService {
         return user;
     }
 
-    public List<User> findAllUsers() {
-        List<User> users = new ArrayList<>();
+    public UserDTO getSignedInUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = findUserByUsername(username);
+        UserDTO userDTO = UserDTO.createDTO(user);
+        return userDTO;
+    }
+
+
+    public List<UserDTO> findAllUsers() {
+        List<UserDTO> users = new ArrayList<>();
         userRepository.findAll().forEach(user ->
         {
             if (user.getUsername() != getCurrentUser().getUsername())
-                users.add(user);
+                users.add(UserDTO.createDTO(user));
         });
         return users;
     }
@@ -47,38 +55,40 @@ public class UserService {
     }
 
 
-    public User addCourseToUser(String username, int id) {
+    public UserDTO addCourseToUser(String username, int id) {
         User user = findUserByUsername(username);
         Course course = courseService.findCourseById(id);
         Set<Course> userCourses = user.getCourses();
         userCourses.add(course);
         user.setCourses(userCourses);
+        UserDTO userDTO = UserDTO.createDTO(user);
         userRepository.save(user);
-
-        return user;
+        return userDTO;
     }
 
 
-    public List<GetUserInfoDTO> getUsersWithParticularRole(String name) {
-        List<GetUserInfoDTO> users = new ArrayList<>();
+    public List<UserBasicInfoDTO> getUsersWithParticularRole(String name) {
+        List<UserBasicInfoDTO> users = new ArrayList<>();
         RoleName roleName = roleService.findRoleName(name);
         userRepository.findAllByRolesName(roleName).forEach(
                 user -> {
                     if (user.getUsername() != getCurrentUser().getUsername())
-                        users.add(GetUserInfoDTO.createDTO(user));
+                        users.add(UserBasicInfoDTO.createDTO(user));
                 });
         return users;
     }
 
-    public User assignRoleToUser(String username, String name) {
+    public UserDTO assignRoleToUser(String username, String name) {
         User user = findUserByUsername(username);
+        UserDTO userDTO;
         RoleName roleName = roleService.findRoleName(name);
         Role role = roleService.findRoleByName(roleName);
         Set<Role> userRoles = user.getRoles();
         userRoles.add(role);
         user.setRoles(userRoles);
         userRepository.save(user);
-        return user;
+        userDTO = UserDTO.createDTO(user);
+        return userDTO;
     }
 
 

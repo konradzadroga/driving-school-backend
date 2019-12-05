@@ -1,5 +1,5 @@
 package com.konradzadroga.drivingschool.rest_api.message;
-import com.konradzadroga.drivingschool.rest_api.user.GetUserInfoDTO;
+import com.konradzadroga.drivingschool.rest_api.user.UserBasicInfoDTO;
 import com.konradzadroga.drivingschool.rest_api.user.User;
 import com.konradzadroga.drivingschool.rest_api.user.UserService;
 import org.springframework.stereotype.Service;
@@ -43,26 +43,26 @@ public class MessageService {
         messageRepository.save(buildMessage(sentMessage));
     }
 
-    public void addMessagesToList(List<GetMessageDTO> messages, String senderUsername, String receiverUsername) {
+    public void addMessagesToList(List<MessageDTO> messages, String senderUsername, String receiverUsername) {
         messageRepository.getAllBySenderUsernameAndReceiverUsername(senderUsername, receiverUsername).forEach(
                 message -> {
-                    messages.add(new GetMessageDTO(
+                    messages.add(new MessageDTO(
                             message.getId(),
                             message.getContent(),
                             message.getSentDate(),
-                            GetUserInfoDTO.createDTO(message.getSender()),
-                            GetUserInfoDTO.createDTO(message.getReceiver())
+                            UserBasicInfoDTO.createDTO(message.getSender()),
+                            UserBasicInfoDTO.createDTO(message.getReceiver())
                     ));
                 }
         );
     }
 
-    public List<GetMessageDTO> getMessagesWithParticularUser(String username) {
-        List<GetMessageDTO> messages = new ArrayList<>();
+    public List<MessageDTO> getMessagesWithParticularUser(String username) {
+        List<MessageDTO> messages = new ArrayList<>();
         User currentUser = getCurrentUser();
         addMessagesToList(messages, currentUser.getUsername(), username);
         addMessagesToList(messages, username, currentUser.getUsername());
-        messages.sort(Comparator.comparing(GetMessageDTO::getSentDate));
+        messages.sort(Comparator.comparing(MessageDTO::getSentDate));
 
         return messages;
     }
