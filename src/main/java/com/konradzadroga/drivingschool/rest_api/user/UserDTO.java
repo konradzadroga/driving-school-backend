@@ -1,12 +1,11 @@
 package com.konradzadroga.drivingschool.rest_api.user;
 
 import com.konradzadroga.drivingschool.rest_api.course.Course;
+import com.konradzadroga.drivingschool.rest_api.course.CourseDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -19,23 +18,31 @@ public class UserDTO {
     private String pesel;
     private Date birthdate;
     private Set<String> roles;
-    private Set<Course> courses;
+    private List<CourseDTO> courses;
 
-    public static UserDTO createDTO(User user) {
-        UserDTO dto = new UserDTO();
+    public UserDTO(User user) {
         Set<String> userRoles = new HashSet<>();
         user.getRoles().forEach(role -> {
             userRoles.add(role.getName().name());
         });
-        dto.setUsername(user.getUsername());
-        dto.setName(user.getName());
-        dto.setSurname(user.getSurname());
-        dto.setEmail(user.getEmail());
-        dto.setPesel(user.getPesel());
-        dto.setBirthdate(user.getBirthdate());
-        dto.setRoles(userRoles);
-        dto.setCourses(user.getCourses());
-        return dto;
+        List<CourseDTO> courseDTOs = new ArrayList<>();
+        user.getCourses().forEach(course -> {
+            if (course.getInstructor() != null) {
+                courseDTOs.add(new CourseDTO(course, course.getInstructor().getUsername()));
+            } else {
+                courseDTOs.add(new CourseDTO(course, ""));
+            }
+        });
+        this.username = user.getUsername();
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.email = user.getEmail();
+        this.pesel = user.getPesel();
+        this.birthdate = user.getBirthdate();
+        this.roles = userRoles;
+        this.courses = courseDTOs;
+
     }
+
 
 }

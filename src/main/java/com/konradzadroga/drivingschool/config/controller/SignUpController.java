@@ -2,6 +2,7 @@ package com.konradzadroga.drivingschool.config.controller;
 
 import com.konradzadroga.drivingschool.config.message.request.SignUpDTO;
 import com.konradzadroga.drivingschool.config.message.response.ResponseMessage;
+import com.konradzadroga.drivingschool.config.service.MailService;
 import com.konradzadroga.drivingschool.rest_api.role.Role;
 import com.konradzadroga.drivingschool.rest_api.role.RoleName;
 import com.konradzadroga.drivingschool.rest_api.role.RoleRepository;
@@ -24,11 +25,14 @@ public class SignUpController {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private MailService mailService;
 
-    public SignUpController(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public SignUpController(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,
+                            MailService mailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mailService = mailService;
     }
 
     @RequestMapping(value="signup", method= RequestMethod.POST)
@@ -68,6 +72,13 @@ public class SignUpController {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return new ResponseEntity<>(new ResponseMessage("Rejestracja przebiegła pomyślnie"), HttpStatus.OK      );
+        try {
+            mailService.registrationSuccessful(signUpDTO);
+        } catch (Exception e) {
+            System.out.println("Wysyłanie wiadomości nieudane");
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(new ResponseMessage("Rejestracja przebiegła pomyślnie"), HttpStatus.OK);
     }
 }

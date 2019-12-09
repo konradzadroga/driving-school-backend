@@ -14,15 +14,13 @@ public class UserBasicInfoDTO {
     private String surname;
     private String email;
 
-    public static UserBasicInfoDTO createDTO(User user) {
-        UserBasicInfoDTO dto = new UserBasicInfoDTO();
 
-        dto.setUsername(user.getUsername());
-        dto.setName(user.getName());
-        dto.setSurname(user.getSurname());
-        dto.setEmail(user.getEmail());
-
-        return dto;
+    public UserBasicInfoDTO(User user) {
+        this.username = user.getUsername();
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.email = user.getEmail();
     }
+
 
 }

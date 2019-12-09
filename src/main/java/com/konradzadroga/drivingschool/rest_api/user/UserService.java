@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Service
@@ -33,7 +34,7 @@ public class UserService {
     public UserDTO getSignedInUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = findUserByUsername(username);
-        UserDTO userDTO = UserDTO.createDTO(user);
+        UserDTO userDTO = new UserDTO(user);
         return userDTO;
     }
 
@@ -43,7 +44,7 @@ public class UserService {
         userRepository.findAll().forEach(user ->
         {
             if (user.getUsername() != getCurrentUser().getUsername())
-                users.add(UserDTO.createDTO(user));
+                users.add(new UserDTO(user));
         });
         return users;
     }
@@ -58,10 +59,11 @@ public class UserService {
     public UserDTO addCourseToUser(String username, int id) {
         User user = findUserByUsername(username);
         Course course = courseService.findCourseById(id);
-        Set<Course> userCourses = user.getCourses();
+        List<Course> userCourses = user.getCourses();
         userCourses.add(course);
         user.setCourses(userCourses);
-        UserDTO userDTO = UserDTO.createDTO(user);
+        UserDTO userDTO = new UserDTO(user);
+        courseService.updateCoursePlaces(id);
         userRepository.save(user);
         return userDTO;
     }
@@ -73,7 +75,7 @@ public class UserService {
         userRepository.findAllByRolesName(roleName).forEach(
                 user -> {
                     if (user.getUsername() != getCurrentUser().getUsername())
-                        users.add(UserBasicInfoDTO.createDTO(user));
+                        users.add(new UserBasicInfoDTO(user));
                 });
         return users;
     }
@@ -87,7 +89,7 @@ public class UserService {
         userRoles.add(role);
         user.setRoles(userRoles);
         userRepository.save(user);
-        userDTO = UserDTO.createDTO(user);
+        userDTO = new UserDTO(user);
         return userDTO;
     }
 

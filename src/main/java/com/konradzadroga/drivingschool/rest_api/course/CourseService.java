@@ -1,6 +1,10 @@
 package com.konradzadroga.drivingschool.rest_api.course;
-
+import com.konradzadroga.drivingschool.rest_api.user.User;
+import com.konradzadroga.drivingschool.rest_api.user.UserDTO;
+import com.konradzadroga.drivingschool.rest_api.user.UserService;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -8,21 +12,57 @@ import java.util.Set;
 public class CourseService {
 
     private CourseRepository courseRepository;
+    private UserService userService;
 
     public CourseService(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
 
-    public List<Course> findAllCourses() {
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public UserService getUserService() {
+        return this.userService;
+    }
+
+    public List<CourseDTO> findAllCourses() {
         List<Course> courses = courseRepository.findAll();
-        return courses;
+        List<CourseDTO> courseDTOs = new ArrayList<>();
+        courses.forEach(course -> {
+            User instructor = course.getInstructor();
+            if (instructor != null) {
+                courseDTOs.add(new CourseDTO(course, instructor.getUsername()));
+            } else {
+                courseDTOs.add(new CourseDTO(course, ""));
+            }
+        });
+        return courseDTOs;
     }
 
     public Course findCourseById(int id) {
         Course course = courseRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Course not found"));
-
         return course;
     }
+
+    public void updateCoursePlaces(int id) {
+        Course course = findCourseById(id);
+        int places = course.getPlaces();
+        places = places - 1;
+        course.setPlaces(places);
+        courseRepository.save(course);
+    }
+
+    public List<CourseDTO> findInstructorCourses(String username) {
+        List<CourseDTO> instructorCourses = new ArrayList<>();
+        List<Course> courses = courseRepository.findAllByInstructorUsername(username);
+        courses.forEach(course -> {
+            instructorCourses.add(new CourseDTO(course, username));
+        });
+
+        return instructorCourses;
+    }
+
 
 }

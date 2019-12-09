@@ -21,8 +21,6 @@ public class PictureService {
     private UserService userService;
     private AmazonS3 amazonS3;
 
-    @Value("${aws.endpoint}")
-    private String endpoint;
     @Value("${aws.bucketname}")
     private String bucketName;
     @Value("${aws.bucketendpoint}")

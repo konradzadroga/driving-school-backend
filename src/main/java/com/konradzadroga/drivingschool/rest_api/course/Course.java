@@ -5,6 +5,9 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -16,13 +19,23 @@ public class Course {
     private int id;
 
     @NotBlank
-    private String name;
+    private String category;
 
     @NotBlank
     private String description;
 
-    @NotBlank
+    @Column
+    private Date startdate;
+
+    @Column
     private int places;
+
+    @Column
+    private float cost;
+
+    @ManyToOne
+    private User instructor;
+
 
 
 }

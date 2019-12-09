@@ -50,8 +50,8 @@ public class MessageService {
                             message.getId(),
                             message.getContent(),
                             message.getSentDate(),
-                            UserBasicInfoDTO.createDTO(message.getSender()),
-                            UserBasicInfoDTO.createDTO(message.getReceiver())
+                            new UserBasicInfoDTO(message.getSender()),
+                            new UserBasicInfoDTO(message.getReceiver())
                     ));
                 }
         );

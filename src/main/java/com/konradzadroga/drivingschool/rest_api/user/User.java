@@ -61,7 +61,7 @@ public class User {
     private Set<Role> roles;
 
     @ManyToMany
-    private Set<Course> courses;
+    private List<Course> courses;
 
     @OneToOne(mappedBy="user", fetch = FetchType.LAZY)
     private Picture picture;
@@ -69,13 +69,14 @@ public class User {
     @OneToMany(mappedBy = "student")
     private Collection<Activity> activities;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "receiver")
     private Collection<Message> receivedMessages;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "sender")
     private Collection<Message> sentMessages;
+
+    @OneToMany(mappedBy = "instructor")
+    private Set<Course> instructedCourses;
 
     public User(@NotBlank @Size(max = 40) String username, @NotBlank @Size(max = 30) String name, @NotBlank @Size(max = 35) String surname, @Email @Size(max = 60) String email, @NotBlank @Size(min = 16, max = 16) String pesel, @NotBlank Date birthdate, @NotBlank @Size(min = 6) String password) {
         this.username = username;
