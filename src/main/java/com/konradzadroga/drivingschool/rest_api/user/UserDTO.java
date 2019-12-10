@@ -27,11 +27,7 @@ public class UserDTO {
         });
         List<CourseDTO> courseDTOs = new ArrayList<>();
         user.getCourses().forEach(course -> {
-            if (course.getInstructor() != null) {
-                courseDTOs.add(new CourseDTO(course, course.getInstructor().getUsername()));
-            } else {
-                courseDTOs.add(new CourseDTO(course, ""));
-            }
+                courseDTOs.add(new CourseDTO(course));
         });
         this.username = user.getUsername();
         this.name = user.getName();

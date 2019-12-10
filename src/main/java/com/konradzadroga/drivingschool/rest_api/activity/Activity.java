@@ -1,5 +1,6 @@
 package com.konradzadroga.drivingschool.rest_api.activity;
 
+import com.konradzadroga.drivingschool.rest_api.course.Course;
 import com.konradzadroga.drivingschool.rest_api.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,10 +17,20 @@ public class Activity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
+    @Column(name="date_of_activity")
     @DateTimeFormat
-    private Date date_of_activity;
+    private Date dateOfActivity;
+
+    @Column
+    private int rate;
+
+    @ManyToOne
+    private Course course;
+
+    @ManyToOne
+    private User instructor;
 
     @ManyToOne
     private User student;

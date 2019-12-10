@@ -30,12 +30,7 @@ public class CourseService {
         List<Course> courses = courseRepository.findAll();
         List<CourseDTO> courseDTOs = new ArrayList<>();
         courses.forEach(course -> {
-            User instructor = course.getInstructor();
-            if (instructor != null) {
-                courseDTOs.add(new CourseDTO(course, instructor.getUsername()));
-            } else {
-                courseDTOs.add(new CourseDTO(course, ""));
-            }
+            courseDTOs.add(new CourseDTO(course));
         });
         return courseDTOs;
     }
@@ -58,7 +53,7 @@ public class CourseService {
         List<CourseDTO> instructorCourses = new ArrayList<>();
         List<Course> courses = courseRepository.findAllByInstructorUsername(username);
         courses.forEach(course -> {
-            instructorCourses.add(new CourseDTO(course, username));
+            instructorCourses.add(new CourseDTO(course));
         });
 
         return instructorCourses;

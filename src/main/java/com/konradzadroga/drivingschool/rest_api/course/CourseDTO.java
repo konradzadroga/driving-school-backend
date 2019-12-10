@@ -23,14 +23,21 @@ public class CourseDTO {
     private Date startdate;
     private float cost;
     private String instructorUsername;
+    private String instructorNameAndSurname;
 
-    public CourseDTO(Course course, String instructorUsername) {
+    public CourseDTO(Course course) {
         this.id = course.getId();
         this.category = course.getCategory();
         this.description = course.getDescription();
         this.places = course.getPlaces();
         this.startdate = course.getStartdate();
         this.cost = course.getCost();
-        this.instructorUsername = instructorUsername;
+        if (course.getInstructor() != null) {
+            this.instructorUsername = course.getInstructor().getUsername();
+            this.instructorNameAndSurname = course.getInstructor().getName() + " " + course.getInstructor().getSurname();
+        } else {
+            this.instructorUsername = "";
+            this.instructorNameAndSurname = "";
+        }
     }
 }
