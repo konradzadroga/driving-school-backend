@@ -7,6 +7,7 @@ import java.util.Date;
 @Data
 public class ActivityDTO {
 
+    private long id;
     private Date dateOfActivity;
     private int rate;
     private CourseDTO course;
@@ -14,6 +15,7 @@ public class ActivityDTO {
     private UserDTO student;
 
     public ActivityDTO(Activity activity) {
+        this.id = activity.getId();
         this.dateOfActivity = activity.getDateOfActivity();
         this.rate = activity.getRate();
         this.course = new CourseDTO(activity.getCourse());
