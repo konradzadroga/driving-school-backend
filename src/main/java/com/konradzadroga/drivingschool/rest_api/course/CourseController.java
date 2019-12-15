@@ -33,4 +33,11 @@ public class CourseController {
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/courses/{id}", method = RequestMethod.GET)
+    public ResponseEntity<CourseDTO> findCourseById(@PathVariable int id) {
+        CourseDTO course = courseService.findCourseDTOById(id);
+
+        return new ResponseEntity<>(course, HttpStatus.OK);
+    }
+
 }

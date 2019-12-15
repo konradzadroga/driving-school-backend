@@ -53,5 +53,12 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value="/users/{username}/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<UserDTO> deleteUser(@PathVariable String username) {
+        UserDTO user = userService.removeUser(username);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
 
 }

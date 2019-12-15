@@ -26,6 +26,9 @@ public class Activity {
     @Column
     private int rate;
 
+    @Column
+    private String comment;
+
     @ManyToOne
     private Course course;
 

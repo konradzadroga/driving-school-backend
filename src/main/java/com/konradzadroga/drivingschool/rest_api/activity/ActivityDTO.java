@@ -10,6 +10,7 @@ public class ActivityDTO {
     private long id;
     private Date dateOfActivity;
     private int rate;
+    private String comment;
     private CourseDTO course;
     private UserDTO instructor;
     private UserDTO student;
@@ -18,6 +19,7 @@ public class ActivityDTO {
         this.id = activity.getId();
         this.dateOfActivity = activity.getDateOfActivity();
         this.rate = activity.getRate();
+        this.comment = activity.getComment();
         this.course = new CourseDTO(activity.getCourse());
         this.instructor = new UserDTO(activity.getInstructor());
         if (activity.getStudent() != null) {

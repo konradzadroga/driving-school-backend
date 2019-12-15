@@ -93,6 +93,14 @@ public class UserService {
         return userDTO;
     }
 
+    public UserDTO removeUser(String username) {
+        User user = findUserByUsername(username);
+        UserDTO userDTO = new UserDTO(user);
+        userRepository.delete(user);
+
+        return userDTO;
+    }
+
 
 
 }
