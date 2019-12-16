@@ -3,10 +3,9 @@ package com.konradzadroga.drivingschool.rest_api.course;
 import com.konradzadroga.drivingschool.rest_api.user.UserBasicInfoDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +35,14 @@ public class CourseController {
     @RequestMapping(value = "/courses/{id}", method = RequestMethod.GET)
     public ResponseEntity<CourseDTO> findCourseById(@PathVariable int id) {
         CourseDTO course = courseService.findCourseDTOById(id);
+
+        return new ResponseEntity<>(course, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value = "/courses/add", method = RequestMethod.POST)
+    public ResponseEntity<CourseDTO> addCourse(@RequestBody AddCourseDTO courseDTO) {
+        CourseDTO course = courseService.addCourse(courseDTO);
 
         return new ResponseEntity<>(course, HttpStatus.OK);
     }

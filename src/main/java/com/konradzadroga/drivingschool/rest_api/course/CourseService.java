@@ -1,31 +1,24 @@
 package com.konradzadroga.drivingschool.rest_api.course;
 import com.konradzadroga.drivingschool.rest_api.user.User;
-import com.konradzadroga.drivingschool.rest_api.user.UserDTO;
 import com.konradzadroga.drivingschool.rest_api.user.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class CourseService {
 
     private CourseRepository courseRepository;
+
     private UserService userService;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, @Lazy UserService userService) {
         this.courseRepository = courseRepository;
-    }
-
-    public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    public UserService getUserService() {
-        return this.userService;
-    }
 
     public List<CourseDTO> findAllCourses() {
         List<Course> courses = courseRepository.findAll();
@@ -69,6 +62,15 @@ public class CourseService {
         });
 
         return instructorCourses;
+    }
+
+    public CourseDTO addCourse(AddCourseDTO courseDTO) {
+        User instructor = userService.findUserByUsername(courseDTO.getInstructorUsername());
+        Course course = new Course(courseDTO, instructor);
+        courseRepository.save(course);
+        CourseDTO returnedCourse = new CourseDTO(course);
+
+        return returnedCourse;
     }
 
 
