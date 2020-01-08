@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  database:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=konradkrol
+      - MYSQL_DATABASE=drivingschooldb
+    ports:
+      - 8085:3306
+  backend:
+    image: drivingschool-image
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    ports:
+      - 8080:8080
