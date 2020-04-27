@@ -26,6 +26,10 @@ public class MailService {
         mail.setSubject("Witaj " + signUpDTO.getName() + " " + signUpDTO.getSurname());
         mail.setText("Dziękujemy za rejestrację na naszej stronie");
         sender.send(mail);
+
+        StringBuilder string = new StringBuilder();
+        string.append("xd").append("xd").append("xddd");
+        String aha = string.toString();
     }
 
     public void sendContactMessage(UserDTO user, String content) {

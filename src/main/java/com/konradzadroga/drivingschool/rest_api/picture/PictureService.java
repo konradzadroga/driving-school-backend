@@ -51,6 +51,7 @@ public class PictureService {
             pictureRepository.save(picture);
             file.delete();
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("There is a problem with file");
         }
         pictureDTO.setUrl(url);
@@ -59,6 +60,8 @@ public class PictureService {
     }
 
     public void uploadFileToS3Bucket(String fileName, File file) {
+        System.out.println(fileName);
+        System.out.println(file);
         amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
