@@ -64,6 +64,7 @@ public class CourseService {
         return instructorCourses;
     }
 
+
     public CourseDTO addCourse(AddCourseDTO courseDTO) {
         User instructor = userService.findUserByUsername(courseDTO.getInstructorUsername());
         Course course = new Course(courseDTO, instructor);

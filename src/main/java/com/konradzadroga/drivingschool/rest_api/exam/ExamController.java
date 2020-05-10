@@ -35,7 +35,7 @@ public class ExamController {
     }
 
     @RequestMapping(value = "/exams/students/{username}", method = RequestMethod.GET)
-    public ResponseEntity<List<ExamDTO>> findAllByStudentId(@PathVariable String username) {
+    public ResponseEntity<List<ExamDTO>> findAllByStudentUsername(@PathVariable String username) {
         List<ExamDTO> exams = examService.findAllByStudentUsername(username);
 
         return new ResponseEntity<>(exams, HttpStatus.OK);
